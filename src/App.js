@@ -5,17 +5,17 @@ import './App.css';
 import { Switch, Route } from 'react-router';
 import { BrowserRouter } from 'react-router-dom';
 import HomePage from './components/HomePage';
-require('dotenv').config();
+import SearchPage from './components/SearchPage';
+import NavSearchPage from './components/NavSearchPage';
+
 
 function App() {
   return (
-    <BrowserRouter>
    <Switch>
     <Route exact path='/' component={HomePage} />
-    <Route  path='/' />
-    <Route  path='/' />
+    <Route  path='/search' component={SearchPage} />
+    <Route  path='/testRedux' component= { NavSearchPage } />
    </Switch>
-   </BrowserRouter>
   );
 }
 
