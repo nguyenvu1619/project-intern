@@ -156,3 +156,15 @@ img,
 
     }
 }
+.homepage-body .center-content {
+    position: absolute;
+    top: 150px;
+}
+.layout-footer__quick-views {
+    width: 100vw;
+}
+@media (max-width: 991px){
+    .homepage-body .center-content {
+        top: 60px;
+    }
+}

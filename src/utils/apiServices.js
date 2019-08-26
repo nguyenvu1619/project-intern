@@ -3,7 +3,7 @@ import axios from 'axios';
 const apiService = async (method, route, data, header) => {
     const result = await axios({
         method,
-        url: `http://192.168.1.247:8384/api/v1/${route}`,
+        url: `http://192.168.1.247:8384/api/demo/${route}`,
         data,
         header
     });

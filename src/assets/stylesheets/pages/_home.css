@@ -15,6 +15,8 @@
   z-index: 990; }
 
 .homepage-body .center-content {
+  position: absolute;
+  top: 150px;
   padding-bottom: 62px; }
 
 .homepage--description .description-line {

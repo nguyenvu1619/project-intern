@@ -5,8 +5,8 @@
     line-height: 1.5;
     border-radius: 20px;
     .row-item-suggestion-popup {
-        padding: 5px 30px;
-        margin: 5px 0px;
+        padding: 2px 30px;
+        margin: 0px 0px;
         :hover {
             background: #b0b6bf;
         }
@@ -19,13 +19,17 @@
 #autoComplete{
     outline: none;
     box-shadow: none !important;
+    border: 0;
 }
-
+#autoComplete__content {
+    border: solid 1px rgba(34, 34, 34, 0.5);
+    border-radius: 20px;
+}
 .active-toggle {
-    border: 0 !important;
+    border-bottom: 1px solid black;
     box-shadow: none !important;
 }
+
 .active-toggle-content {
-    border: solid 0.7px rgba(34, 34, 34, 0.5);
-    border-radius: 20px;
+    padding-bottom: 20px;
 }

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import apiServices from '../utils/apiServices';
 import SearchResults from './SearchResult';
+import {connect} from 'react-redux';
 
 const list = [1,2,3,4,5,6,7,8,9];
 class SearchPage extends Component {
@@ -9,6 +10,8 @@ class SearchPage extends Component {
         data: []
     }
     async componentDidMount() {
+        const keyWord = this.props.keyWord;
+        console.log(keyWord);
         const result = await apiServices('get',`search/get_post_by_keyword?keyword=${this.props.keyWord}`)
         console.log(result);
     }
@@ -291,4 +294,10 @@ class SearchPage extends Component {
     }
 }
 
-export default SearchPage;
+const mapStateToProp = state =>{
+    console.log(state);
+    return {
+    keyWord: state.searchWithKeyword.keyWord
+    }
+};
+export default connect(mapStateToProp, null)(SearchPage);

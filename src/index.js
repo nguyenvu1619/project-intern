@@ -5,7 +5,7 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
-import reducer from './reducers/FilterSearch';
+import reducer from './reducers';
 import { createStore } from 'redux';
 
 const rootElement = document.getElementById('root');

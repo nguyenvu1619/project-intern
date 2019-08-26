@@ -6,15 +6,14 @@ import { Switch, Route } from 'react-router';
 import { BrowserRouter } from 'react-router-dom';
 import HomePage from './components/HomePage';
 import SearchPage from './components/SearchPage';
-import NavSearchPage from './components/NavSearchPage';
-
+import SearchInput from './components/SearchInput';
 
 function App() {
   return (
    <Switch>
     <Route exact path='/' component={HomePage} />
     <Route  path='/search' component={SearchPage} />
-    <Route  path='/testRedux' component= { NavSearchPage } />
+    <Route  path='/testRedux' component={SearchInput} />
    </Switch>
   );
 }
