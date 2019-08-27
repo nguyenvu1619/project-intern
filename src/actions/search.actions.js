@@ -3,15 +3,25 @@ import {
     COUNT_UP_HOVER_SUGGESTION,
     CHANGE_HOVER_SUGGESTION,
     COUNT_DOWN_HOVER_SUGGESTION,
-    MOUSE_HOVER_SUGGESTION
+    MOUSE_HOVER_SUGGESTION,
+    SEARCH_CHECK_CLICK_OUT_SIDE,
 } from '../constant';
 
 export const changeKeyword = keyWord => {
     return {
         type: SEARCH_CHANGE_KEYWORD,
-        keyWord: keyWord
+        keyWord
     }
 }
+
+export const checkClickOutSide = nodeClicked =>{
+    return {
+        type: SEARCH_CHECK_CLICK_OUT_SIDE,
+        nodeClicked
+    }
+}
+
+
 
 export const changeHoverSuggestion = (type,currentHover, lengthSuggestion) =>{
     switch (type){
@@ -40,5 +50,7 @@ export const changeHoverSuggestion = (type,currentHover, lengthSuggestion) =>{
                 type: CHANGE_HOVER_SUGGESTION,
                 currentHover
             }
+        default: 
+        return
     }
 };

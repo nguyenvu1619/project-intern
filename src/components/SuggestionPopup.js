@@ -1,17 +1,17 @@
 import React, { Component, useState } from 'react';
 import { changeHoverSuggestion } from '../actions/search.actions';
 import { connect } from 'react-redux';
+import { Redirect } from 'react-router';
 import {MOUSE_HOVER_SUGGESTION} from '../constant';
 function RowItem(props){
-    const isActive = false;
-    
+    const [isSearch,setIsSearch] = useState(0);
     const handleClick = async (event) => {
-        window.location = `./search?key-word=${props.item.name}`;
+        setIsSearch(true);
     }
     const handleHover = (event) => {
       props.changeCurrentHover(MOUSE_HOVER_SUGGESTION, props.index);
     }
-     return  <div onClick={handleClick} onMouseEnter={handleHover}  className ={`row-item-suggestion-popup ${props.active ? 'active' : ''}`}>
+    return isSearch ? <Redirect to='/search'/> :<div onClick={handleClick} onMouseEnter={handleHover}  className ={`row-item-suggestion-popup ${props.active ? 'active' : ''}`}>
     {props.item}
     </div>
 };

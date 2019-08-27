@@ -1,9 +1,15 @@
-import {CHANGE_HOVER_SUGGESTION } from '../constant';
-import { SEARCH_CHANGE_KEYWORD } from '../constant';
+import {
+    CHANGE_HOVER_SUGGESTION,
+    SEARCH_CHANGE_KEYWORD,
+    SEARCH_CHECK_CLICK_OUT_SIDE,
+} from '../constant';
 
-const initializing ={
+const initializing = {
     keyWord: '',
-    currentHover: -1
+    currentHover: -1,
+    nodeClicked: null,
+    isShowPopup: false,
+    nodeInput: null
 }
 
 export default function searchReducer(state = initializing, action){
@@ -17,6 +23,11 @@ export default function searchReducer(state = initializing, action){
             return {
                 ...state,
                 keyWord: action.keyWord
+            }
+        case SEARCH_CHECK_CLICK_OUT_SIDE:
+            return {
+                ...state,
+                nodeClicked: action.nodeClicked
             }
         default:
             return state;

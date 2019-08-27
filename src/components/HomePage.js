@@ -1,110 +1,11 @@
-import React, { Component } from 'react';
-import apiService from '../utils/apiServices';
-import SuggestionPopup from './SuggestionPopup';
+import React from 'react';
 import SearchInput from './SearchInput';
-import {searchWithKeywordAction} from '../actions/searchWithKeyword';
-import {changeHoverSuggestion} from '../actions/search.actions';
+import { checkClickOutSide } from '../actions/search.actions';
 import { connect } from 'react-redux';
-import {Redirect} from 'react-router';
 
-class HomePage extends Component {
-    constructor(props) {
-        super(props);
-        this.wrapperRef = React.createRef();
-        this.inputRef = React.createRef();
-        this.state = {
-            keyword : '',
-            listSuggestion: [],
-            active: -1,
-            isShowPopup: false,
-            isSearch: false
-        }
-    }
-    handleChangeActiveByMouse = (index) => {
-        this.setState({
-            active: index
-        });
-    }
-    handleChange = async (event) => {
-        await this.setState({
-            keyword: event.target.value,
-            isShowPopup: true
-        });
-        console.log(this.state.isShowPopup);
-        if (this.state.keyword.length ===0)
-             this.setState({
-                isShowPopup:false
-            });
-        await this.setState({
-            active: -1
-        })
-        let result
-        if (this.state.keyword !== 0)
-          result = await apiService('get',`suggestion?keyword=${this.state.keyword}`,);
-        if (!result.data.statusMessage){
-             this.setState({
-                listSuggestion: result.data
-            })
-        }
-        else  this.setState({
-          listSuggestion: []
-      })
-    }
-    handleClickOutSide = async (event) => {
-        if(this.wrapperRef.current)
-        {
-        if (!this.wrapperRef.current.contains(event.target)) {
-           await this.setState({
-               isShowPopup: false
-           })
-        }
-    }
-      }
-    handleKeydown = async (event) => {
-        const nodeInput = this.inputRef.current;
-        const lengthSuggestion = this.state.listSuggestion.length;
-        
-        if(event.key === 'Enter' && lengthSuggestion !== 0)
-        {
-          this.props.changeKeyWordSearch(nodeInput.value);
-          this.setState({
-            isSearch: true
-          })
-        }
-        if (this.state.isShowPopup){
-        if(event.key === 'ArrowUp')
-        {
-          event.preventDefault();
-            if(this.state.active ===-1)
-                await this.setState({
-                active: lengthSuggestion-1
-            });
-            else 
-            await this.setState({
-            active: this.state.active-1
-        })
-        }
-        if(event.key === 'ArrowDown')
-        {
-            if(this.state.active ===lengthSuggestion -1)
-            await this.setState({
-                active: -1
-            });
-            else 
-            await this.setState({
-            active: this.state.active+1
-        })
-        }
-        if(this.state.listSuggestion.length > 0 && this.state.active != -1)
-        nodeInput.value = this.state.listSuggestion[this.state.active].name;
-      }
-    }
-    render(){
-      return this.state.isSearch ? (
-        <Redirect to='/search' />
-      ) : (
-         <div className="section-homepage" onClick ={this.handleClickOutSide} >
-            <div ref={this.abc} className="container-fluid homepage__container">
+function HomePage({checkClickOutSide}) {
+      return <div className="section-homepage" onClick={e => checkClickOutSide(e.target)} >
+            <div className="container-fluid homepage__container">
               <div className="homepage__header layout-header d-none d-lg-block">
                 <div className="homepage__header-container layout-header__container">
                   <div className="homepage__header-top layout-header__top">
@@ -155,16 +56,7 @@ class HomePage extends Component {
                         </div>
                         <div className="homepage--input-search">
                           <div className="input-search__container d-flex justify-content-center">
-                            <div className={`w-100 input-search__content collapsed ${this.state.isShowPopup ? 'active-toggle-content' : ''}`} id="autoComplete__content">
-                            {this.state.isShowPopup ? <input ref={this.inputRef} autocomplete="off" onKeyDown={this.handleKeydown} onChange={this.handleChange}  className="form-control active-toggle" id="autoComplete" type="text" placeholder="Search ..." tabindex="1"/>
-                            : <input ref={this.inputRef} autocomplete="off" onKeyDown={this.handleKeydown} onChange={this.handleChange}  className="form-control" id="autoComplete" type="text" placeholder="Search ..." tabindex="1"/>
-                            }
-                             {this.state.isShowPopup ?
-                             <div ref={this.wrapperRef}>
-                             <SuggestionPopup ref={this.wrapperRef} onChangeHover={this.handleChangeActiveByMouse} active ={this.state.active}  listSuggestion={this.state.listSuggestion}/>
-                             </div>
-                             : null }
-                            </div>
+                           <SearchInput/>
                           </div>
                         </div>
                       </div>
@@ -197,9 +89,10 @@ class HomePage extends Component {
               </div>
             </div>
           </div>
-          )
-    }
 }
 
+const mapDispatchToProp = dispatch =>({
+  checkClickOutSide : (node) => dispatch(checkClickOutSide(node))
+})
 
-export default HomePage;
+export default connect(null, mapDispatchToProp)(HomePage);
