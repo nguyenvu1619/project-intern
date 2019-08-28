@@ -1,29 +1,46 @@
 import React, { Component } from 'react';
-import {changeHoverSuggestion, changeKeyword} from '../actions/search.actions';
+import {changeHoverSuggestion, changeKeyword, toggleSearch, setListItem} from '../actions/search.actions';
 import { connect } from 'react-redux';
+import queryString from 'query-string';
+import _ from 'lodash';
+import { Redirect, withRouter } from 'react-router'
 import apiService from '../utils/apiServices';
 import SuggestionPopup from './SuggestionPopup';
 import {
     COUNT_DOWN_HOVER_SUGGESTION as DOWN,
     COUNT_UP_HOVER_SUGGESTION as UP,
 } from '../constant';
-
-const list = [0,1,2,3,4,5,6,7];
 class SearchInput extends Component {
     constructor(props) {
         super(props);
         this.wrapperRef = React.createRef();
         this.inputRef = React.createRef();
+        this.checkSearch = React.createRef();
         this.state = {
             keyword: '',
             listSuggestion: [],
             active: -1,
-            isShowPopup: false,
-            isSearch: false,
+            isShowPopup: false
         }
     }
+    componentDidMount(){
+        const searchUrl = this.props.location.search;
+        const keyword = queryString.parse(searchUrl).keyword;
+        console.log(this.props.keyword)
+        if(this.props.keyword){
+            if(this.inputRef.current){
+                this.inputRef.current.value = this.props.keyword;
+            }
+        }
+        else if(keyword){
+            console.log(this.props.keyword)
+        if(this.inputRef.current){
+            this.inputRef.current.value = keyword;
+        }
+    }
+    }
     componentDidUpdate(prevProps){
-        if(prevProps !== this.props){
+        if(prevProps.nodeClicked !== this.props.nodeClicked){
             if (this.wrapperRef.current) 
                 if (!this.wrapperRef.current.contains(this.nodeClicked)) {
                     this.setState({
@@ -31,6 +48,12 @@ class SearchInput extends Component {
                     })
                 }
             }
+        if(this.checkSearch.current){
+            this.props.toggleSearch(true)
+            this.setState({
+                isShowPopup: false
+            })
+        }
     }
     handleChangeActiveByMouse = (index) => {
         this.setState({
@@ -49,9 +72,10 @@ class SearchInput extends Component {
         await this.setState({
             active: -1
         })
-        let result
-        if (this.state.keyword !== 0)
-            result = await apiService('get', `suggestion?keyword=${this.state.keyword}`, );
+        let result;
+        if (this.state.keyword !== 0){
+            result = await apiService('get', `search/suggestion?keyword=${this.state.keyword}`, 1000);
+        }
         if (!result.data.statusMessage) {
             this.setState({
                 listSuggestion: result.data
@@ -63,44 +87,51 @@ class SearchInput extends Component {
 
     handleKeydown = async (event) => {
         const nodeInput = this.inputRef.current;
-        const lengthSuggestion = list.length  //this.state.listSuggestion.length;
+        const lengthSuggestion = this.state.listSuggestion.length;
         const { currentHover, changeHoverSugesstion } = this.props;
+        let newCurrentHover;
         if (event.key === 'Enter' && lengthSuggestion !== 0) {
-            this.props.changeKeyWordSearch(nodeInput.value);
-            this.setState({
-                isSearch: true
-            })
+            this.props.changeKeyword(nodeInput.value);
+            this.props.toggleSearch(false);
         }
         if (this.state.isShowPopup) {
             if (event.key === 'ArrowUp') {
                 event.preventDefault();
-                changeHoverSugesstion(UP, currentHover, lengthSuggestion);
+                newCurrentHover = changeHoverSugesstion(UP, currentHover, lengthSuggestion).currentHover;
             }
             if (event.key === 'ArrowDown') {
-                changeHoverSugesstion(DOWN, currentHover, lengthSuggestion);                
+                newCurrentHover = changeHoverSugesstion(DOWN, currentHover, lengthSuggestion).currentHover;   
             }
-            if (this.state.listSuggestion.length > 0 && this.state.active !== -1)
-                nodeInput.value = this.state.listSuggestion[this.state.active].name;
+            if (this.state.listSuggestion.length > 0 && (event.key === 'ArrowDown' || event.key === 'ArrowUp')){
+                if(newCurrentHover!== -1)
+                nodeInput.value = this.state.listSuggestion[newCurrentHover].title;
+                else nodeInput.value = this.state.keyword;
+            }
         }
     }
-
     render(){
-    return <div className={`w-100 input-search__content collapsed ${this.state.isShowPopup ? 'active-toggle-content' : ''}`} id="autoComplete__content">
-    <input ref={this.inputRef} autocomplete="off" onKeyDown={this.handleKeydown} onChange={this.handleChange}  className="form-control" id="autoComplete" type="text" placeholder="Search ..." tabindex="1"/>
+        console.log(this.state.keyword)
+    return this.props.isSearch ? <div ref={this.checkSearch}>
+     <Redirect to={`/search?keyword=${this.props.keyword}&page=1`} />
+     </div> : <div style={this.props.style} className={`w-100 input-search__content collapsed ${this.state.isShowPopup ? 'active-toggle-content' : ''}`} id="autoComplete__content">
+    <input defaultValue={this.props.keyword} ref={this.inputRef} autocomplete="off" onKeyDown={this.handleKeydown} onChange={this.handleChange}  className="form-control" id="autoComplete" type="text" placeholder="Search ..." tabindex="1"/>
      <div ref={this.wrapperRef}>
-        {this.state.isShowPopup &&<SuggestionPopup ref={this.wrapperRef} onChangeHover={this.handleChangeActiveByMouse} active ={this.state.active}  listSuggestion={list}/>}
+        {this.state.isShowPopup &&<SuggestionPopup onChangeHover={this.handleChangeActiveByMouse}  listSuggestion={this.state.listSuggestion}/>}
     </div>
     </div>
     }
 }
 const mapStateToProp = state => ({
     currentHover: state.search.currentHover,
-    nodeClicked: state.search.nodeClicked
+    nodeClicked: state.search.nodeClicked,
+    isSearch: state.search.isSearch,
+    keyword: state.search.keyword,
+    currentPage: state.search.currentPage
 });
-
 const mapDispatchToProp = dispatch => ({
-     changeHoverSugesstion: (type, currentHover, lengthSuggestion) => dispatch(changeHoverSuggestion(type, currentHover, lengthSuggestion)),
      changeKeyword: keyword => dispatch(changeKeyword(keyword)),
+     toggleSearch: isSearch => dispatch(toggleSearch(isSearch)),
+     changeHoverSugesstion: (type, currentHover, lengthSuggestion) => dispatch(changeHoverSuggestion(type, currentHover, lengthSuggestion))
 });
 
-export default connect(mapStateToProp, mapDispatchToProp)(SearchInput);
+export default withRouter(connect(mapStateToProp, mapDispatchToProp)(SearchInput));

@@ -5,12 +5,22 @@ import {
     COUNT_DOWN_HOVER_SUGGESTION,
     MOUSE_HOVER_SUGGESTION,
     SEARCH_CHECK_CLICK_OUT_SIDE,
+    SEARCH_CHANGE_CURRENT_PAGE,
+    SEARCH_TOGGLE_SEARCH,
+    SEARCH_SET_LIST_ITEM
 } from '../constant';
 
-export const changeKeyword = keyWord => {
+export const changeKeyword = keyword => {
     return {
         type: SEARCH_CHANGE_KEYWORD,
-        keyWord
+        keyword
+    }
+}
+
+export const setListItem = listItem => {
+    return {
+        type: SEARCH_SET_LIST_ITEM,
+        listItem
     }
 }
 
@@ -21,7 +31,18 @@ export const checkClickOutSide = nodeClicked =>{
     }
 }
 
-
+export const toggleSearch = isSearch => {
+    return {
+        type: SEARCH_TOGGLE_SEARCH,
+        isSearch: !isSearch
+    }
+}
+export const changeCurrentPage = currentPage => {
+    return {
+        type: SEARCH_CHANGE_CURRENT_PAGE,
+        currentPage
+    }
+}
 
 export const changeHoverSuggestion = (type,currentHover, lengthSuggestion) =>{
     switch (type){

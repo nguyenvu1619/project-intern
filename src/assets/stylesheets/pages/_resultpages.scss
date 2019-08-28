@@ -8,7 +8,18 @@ $main:#3b63a1;
 .rp-header-top__container {
     padding-right: 90px;
 }
-
+.page-choosed{
+    margin: 0 !important;
+    text-decoration-line: none !important; 
+}
+.sr-pagination__items .sr-pagination--item:hover{
+   background: white !important;
+   text-decoration-line: underline; 
+}
+.page-choosed:hover{
+    background: white !important;
+    color: #545454 !important;
+}
 .result-pages__header .dropdown-menu {
     z-index: 1030;
 }

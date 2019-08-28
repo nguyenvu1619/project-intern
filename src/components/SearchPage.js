@@ -1,26 +1,44 @@
 import React, { Component } from 'react';
 import apiServices from '../utils/apiServices';
-import SearchResults from './SearchResult';
+import SearchResults from './SearchList/SearchResult';
+import SearchInput from './SearchInput';
+import queryString from 'query-string';
+import {setListItem, changeCurrentPage, changeKeyword} from '../actions/search.actions';
+import { withRouter } from 'react-router';
 import {connect} from 'react-redux';
+import NavPage from './NavPage/NavPage';
 
-const list = [1,2,3,4,5,6,7,8,9];
+
 class SearchPage extends Component {
     state = {
-        filter: 'all',
-        data: []
+        isMount: false
     }
     async componentDidMount() {
-        const keyWord = this.props.keyWord;
-        console.log(keyWord);
-        const result = await apiServices('get',`search/get_post_by_keyword?keyword=${this.props.keyWord}`)
-        console.log(result);
+        const query = this.props.location.search;
+        const keyword = queryString.parse(query).keyword;
+        const page = queryString.parse(query).page;
+        if (page){
+            this.props.changeCurrentPage(parseInt(page));
+        }
+        this.props.changeKeyword(keyword);
+        const result = await apiServices('get', `search/all?keyword=${keyword}&page=${page}`);
+        this.props.setListItem(result.data);
     }
-    handleFilter = (event) => {
-        const filter = event.currentTarget.getAttribute('data-filter');
-        if (filter !== this.state.filter)
-            this.setState({
-                filter
-            })
+
+    async componentDidUpdate(prevProps){
+        const query = this.props.location.search;
+        const keyword = queryString.parse(query).keyword;
+        const page = this.props.currentPage;
+        if(prevProps.currentPage !== this.props.currentPage){
+            this.props.history.push(`/search?keyword=${keyword}&page=${page}`);
+            if (page){
+                this.props.changeCurrentPage(parseInt(page));
+            }
+        }
+        const result = await apiServices('get', `search/all?keyword=${keyword}&page=${page}`);
+        if(prevProps.keyword !== this.props.keyword){
+           this.props.setListItem(result.data);
+        }
     }
     render(){
         return( <section className="section__result-pages">
@@ -34,9 +52,7 @@ class SearchPage extends Component {
                             </div>
                             <div className="rp-header-top__search-input lh-top__search-input">
                                 <div className="search-input">
-                                    <div className="w-100 input-search__content collapsed" id="autoComplete__content">
-                                        <input className="form-control" id="autoComplete" type="text" placeholder="Search ..." tabindex="1"/>
-                                    </div>
+                                   <SearchInput style={{top:'25px'}} valueInput={this.props.keyword}/>
                                 </div>
                             </div>
                             <div className="ml-auto rp-header-top__menu lh-top__menu">
@@ -101,16 +117,9 @@ class SearchPage extends Component {
                                 </div>
                             </div>
                         </div>
-                        <SearchResults resultList ={list} />
-                            
+                        <SearchResults listItem ={this.props.listItem} />
                         </div>
-                        <div className="rp-search-result__pagination">
-                            <div className="search-result__pagination-container container">
-                                <div className="search-result__pagination-content d-flex align-items-center justify-content-center justify-content-sm-end"><a className="sr-pagination--btn sr-pagination--previous" href="#">Tr&#x1B0;&#x1EDB;c</a>
-                                    <div className="sr-pagination__items d-flex align-items-center"><a className="sr-pagination--item is-actived" href="#">1</a><a className="sr-pagination--item" href="#">2</a><a className="sr-pagination--item" href="#">3</a><a className="sr-pagination--item" href="#">4</a><a className="sr-pagination--item" href="#">5</a></div><a className="sr-pagination--btn sr-pagination--next" href="#">Ti&#x1EBF;p</a>
-                                </div>
-                            </div>
-                        </div>
+                        <NavPage/>
                     </div>
                 </div>
             </div>
@@ -294,10 +303,14 @@ class SearchPage extends Component {
     }
 }
 
-const mapStateToProp = state =>{
-    console.log(state);
-    return {
-    keyWord: state.searchWithKeyword.keyWord
-    }
-};
-export default connect(mapStateToProp, null)(SearchPage);
+const mapStateToProp = state =>({
+    keyword: state.search.keyword,
+    currentPage: state.search.currentPage,
+    listItem: state.search.listItem
+})
+const mapDispatchToProp = dispatch => ({
+    setListItem: listItem => dispatch(setListItem(listItem)),
+    changeCurrentPage: page => dispatch(changeCurrentPage(page)),
+    changeKeyword: keyword => dispatch(changeKeyword(keyword))
+})
+export default withRouter(connect(mapStateToProp, mapDispatchToProp)(SearchPage));

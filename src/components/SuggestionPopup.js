@@ -12,7 +12,7 @@ function RowItem(props){
       props.changeCurrentHover(MOUSE_HOVER_SUGGESTION, props.index);
     }
     return isSearch ? <Redirect to='/search'/> :<div onClick={handleClick} onMouseEnter={handleHover}  className ={`row-item-suggestion-popup ${props.active ? 'active' : ''}`}>
-    {props.item}
+    {props.item.title}
     </div>
 };
 
@@ -25,7 +25,11 @@ function SuggestionPopup(props){
     return <RowItem changeCurrentHover={props.changeCurrentHover} active={false} index={i} item={item}/>    
    })}
     </div>
-    return <></>
+    else return <div className='suggestion-list'>
+    <div className ='row-item-suggestion-popup'>
+    Không tìm thấy kết quả nào
+    </div>
+    </div>
 }
 const mapStateToProp = state => ({
     currentHover: state.search.currentHover

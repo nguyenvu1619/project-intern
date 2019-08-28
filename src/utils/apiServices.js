@@ -1,14 +1,15 @@
 import axios from 'axios';
 
-const apiService = async (method, route, data, header) => {
+const apiService = async (method, route,timeout, data, header) => {
+    'sdfsdfdsfdsf'
     const result = await axios({
         method,
-        url: `http://192.168.1.247:8384/api/demo/${route}`,
+        url: `http://27.74.250.96:8384/api/v1/${route}`,
         data,
-        header
+        header,
+        timeout
     });
     console.log(result);
-    console.log(process.env.REACT_APP_API);
     return result;
 }
 
