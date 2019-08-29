@@ -2,15 +2,17 @@ import React, { Component } from 'react';
 import { connect} from 'react-redux'
 import PostItem from './PostItem';
 import AddressItem from './AddressItem';
+import ProductItem from './ProductItem';
 
 function SearchResults(props){
     return <div className = "rp-search-result__items" >
     {props.listItem.map(item => {
-        console.log(item.type);
         if(item.type ==='post')
         return <PostItem item={item} />
         if(item.type ==='res_address')
         return <AddressItem item={item} />
+        if(item.type === 'product')
+        return <ProductItem item={item} />
     return <div className="rp-search-result-item">
     <div className="search-result__item-container d-flex"><img className="sr-item__modal" src="../assets/img/icon-modal.png"/>
         <div className="sr-item__poster">

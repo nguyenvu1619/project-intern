@@ -13,7 +13,7 @@ const renderApp = App => {
      ReactDOM.render(
     <Provider store={store}>
       <BrowserRouter>
-        <App />
+        <App/>
       </BrowserRouter>
     </Provider>,
     rootElement

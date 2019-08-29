@@ -4,7 +4,11 @@ import {
     SEARCH_CHECK_CLICK_OUT_SIDE,
     SEARCH_CHANGE_CURRENT_PAGE,
     SEARCH_TOGGLE_SEARCH,
-    SEARCH_SET_LIST_ITEM
+    SEARCH_SET_LIST_ITEM,
+    SEARCH_SET_CATEGORY_LIST,
+    SEARCH_SET_SHOW_MODAL,
+    SEARCH_SET_ID_MODAL,
+    SEARCH_SET_SCROLL_POSTION
 } from '../constant';
 
 const initializing = {
@@ -13,8 +17,14 @@ const initializing = {
     nodeClicked: null,
     currentPage: 1,
     isSearch: false,
-    listItem: []
+    listItem: [],
+    listCategory: [],
+    isShowModal: false,
+    idModal: '',
+    positionScroll: 0
 }
+
+
 
 export default function searchReducer(state = initializing, action){
     switch (action.type){
@@ -49,6 +59,26 @@ export default function searchReducer(state = initializing, action){
                 ...state,
                 listItem: action.listItem
             }
+        case SEARCH_SET_CATEGORY_LIST:
+            return {
+                ...state,
+                listCategory: action.listCategory
+            }
+        case SEARCH_SET_SHOW_MODAL:
+            return {
+                ...state,
+                isShowModal: action.isShowModal
+            } 
+        case SEARCH_SET_ID_MODAL:
+            return {
+                ...state,
+                idModal: action.idModal
+            }
+        case SEARCH_SET_SCROLL_POSTION:
+            return {
+                ...state,
+                positionScroll: action.positionScroll
+            }  
         default:
             return state;
     }

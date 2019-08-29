@@ -1,0 +1,1 @@
+export const URL_PHOTO = 'http://27.74.250.96:8283/api/v1/document'

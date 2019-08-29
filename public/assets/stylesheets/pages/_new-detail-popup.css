@@ -247,7 +247,9 @@
     .content-comment__item .cc-item__details {
         padding-left: 15px;
     }
-
+    .ndt-modal__container{
+        z-index: 1000;
+    }
     .content-comment__item .cc-item__details .content-1 {
         font-size: 13px;
     }
@@ -298,10 +300,11 @@
 
 
 .info-fix{
+    padding-left: 50px;
     position: fixed;
     top: 40%;
     left: calc(5% + 20px);
-    width: 100px;
+    width: 200px;
     background: #fff;
     z-index: 10;
     transition: all 0.3 ease;

@@ -5,7 +5,6 @@ import NavPageItem from './NavPageItem';
 
 
 function NavPageListItems({currentPage}){
-    console.log(currentPage)
     const arr = [];
     if(currentPage < 7){
         for (let i= 1; i<= 10; i++){
@@ -15,7 +14,6 @@ function NavPageListItems({currentPage}){
     else 
      for (let i= currentPage -5; i<= currentPage + 4; i++){
         arr.push(i);
-        console.log(arr);
     }
     return arr.map(index => <NavPageItem index={index} />)
 }

@@ -1,7 +1,13 @@
-import React from 'react';
-
-function PostItem({item}){
-    return  <div className="rp-search-result-item">
+import React, {Component} from 'react';
+import { connect } from 'react-redux';
+import { setShowModal, setIDModal } from '../../actions/search.actions';
+function PostItem({item, setShowModal, setIDModal}){
+    const handleClick = (event) => {
+        setIDModal(item._id);
+        setShowModal(true);
+    }
+    return  <div>
+    <div onClick={handleClick} className="rp-search-result-item">
     <div className="search-result__item-container d-flex"><img className="sr-item__modal" src="../../assets/img/icon-modal.png"/>
         <div className="sr-item__poster">
             <div className="poster--avatar"><a href="#"><img src="../../assets/img/Rectangle 97.png" alt=""/></a></div>
@@ -46,6 +52,14 @@ function PostItem({item}){
         </div>
     </div>
     </div>
+    </div>
 }
+const mapStateToProp = state => ({
+    isShowModal: state.search.isShowModal
+})
+const mapDispatchToProp = dispatch => ({
+    setShowModal: status => dispatch(setShowModal(status)),
+    setIDModal: id => dispatch(setIDModal(id))
+})
 
-export default PostItem;
+export default connect(mapStateToProp, mapDispatchToProp)(PostItem);

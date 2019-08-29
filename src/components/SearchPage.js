@@ -1,13 +1,15 @@
+import _ from 'lodash'
 import React, { Component } from 'react';
 import apiServices from '../utils/apiServices';
+import { checkClickOutSide } from '../actions/search.actions';
 import SearchResults from './SearchList/SearchResult';
 import SearchInput from './SearchInput';
 import queryString from 'query-string';
-import {setListItem, changeCurrentPage, changeKeyword} from '../actions/search.actions';
+import {setListItem, changeCurrentPage, changeKeyword, setListCategory, setShowModal} from '../actions/search.actions';
 import { withRouter } from 'react-router';
 import {connect} from 'react-redux';
 import NavPage from './NavPage/NavPage';
-
+import PostModal from './Modal/PostModal';
 
 class SearchPage extends Component {
     state = {
@@ -19,15 +21,17 @@ class SearchPage extends Component {
         const page = queryString.parse(query).page;
         if (page){
             this.props.changeCurrentPage(parseInt(page));
-        }
+       }
+       const listCategory = await apiServices('get', 'product/category');
+       this.props.setListCategory(listCategory.data);
         this.props.changeKeyword(keyword);
         const result = await apiServices('get', `search/all?keyword=${keyword}&page=${page}`);
         this.props.setListItem(result.data);
     }
-
+    
     async componentDidUpdate(prevProps){
-        const query = this.props.location.search;
-        const keyword = queryString.parse(query).keyword;
+        document.addEventListener("keydown", this.handleKeyDown, false);
+        const keyword = this.props.keyword;
         const page = this.props.currentPage;
         if(prevProps.currentPage !== this.props.currentPage){
             this.props.history.push(`/search?keyword=${keyword}&page=${page}`);
@@ -36,14 +40,24 @@ class SearchPage extends Component {
             }
         }
         const result = await apiServices('get', `search/all?keyword=${keyword}&page=${page}`);
-        if(prevProps.keyword !== this.props.keyword){
+        if(!_.isEqual(result.data, this.props.listItem)){
            this.props.setListItem(result.data);
         }
     }
+    handleKeyDown = event => {
+        console.log(event.key)
+        if(event.key === 'Escape')
+        if(this.props.isShowModal)
+        this.props.setShowModal(false)
+    }
     render(){
-        return( <section className="section__result-pages">
-        <div className="container-fluid result-pages__container">
-            <div className="result-pages__header layout-header">
+        console.log(this.props.listItem);
+        return( <div>
+            {this.props.isShowModal && <PostModal />}
+        <section onKeyPress ={this.handleKeyDown}  className="section__result-pages" tabIndex="0" >
+       
+        <div onKeyPress ={this.handleKeyDown} onClick={e => {this.props.checkClickOutSide(e.target)}} className="container-fluid result-pages__container">
+            <div  className="result-pages__header layout-header">
                 <div className="result-pages__header-container layout-header__container">
                     <div className="result-pages__header-top layout-header__top">
                         <div className="d-flex align-items-center rp-header-top__container lh-top__container">
@@ -98,7 +112,7 @@ class SearchPage extends Component {
                         </div>
                     </div>
                 </div>
-            <div className="result-pages__body">
+            {this.props.listItem.length>0 && <div className="result-pages__body">
                 <div className="result-pages__body-container container">
                     <div className="result-pages__search-result">
                         <div className="rp-search-result__header">
@@ -119,11 +133,13 @@ class SearchPage extends Component {
                         </div>
                         <SearchResults listItem ={this.props.listItem} />
                         </div>
+                        <div className='rp-search-result__items'></div>
                         <NavPage/>
                     </div>
                 </div>
-            </div>
-            <div className="result-pages__footer layout-footer">
+             }
+             </div>
+          {this.props.listItem.length > 0 && <div className="result-pages__footer layout-footer">
                 <div className="result-pages__footer-container">
                     <div className="rs-footer__links layout-footer__links d-flex justify-content-center justify-content-lg-start">
                         <div className="rs-footer--link layout-footer--link"><a href="#">Gi&#x1EDB;i thi&#x1EC7;u</a></div>
@@ -160,7 +176,7 @@ class SearchPage extends Component {
                         </div>
                     </div>
                 </div>
-            </div>
+            </div>}
         </div>
       
         <div className="d-none d-lg-block chat-sidebar collapsed" id="chat-sidebar">
@@ -299,6 +315,7 @@ class SearchPage extends Component {
             </div>
         </div>
         </section>
+        </div>
         )
     }
 }
@@ -306,11 +323,16 @@ class SearchPage extends Component {
 const mapStateToProp = state =>({
     keyword: state.search.keyword,
     currentPage: state.search.currentPage,
-    listItem: state.search.listItem
+    listItem: state.search.listItem,
+    isShowModal: state.search.isShowModal
 })
 const mapDispatchToProp = dispatch => ({
     setListItem: listItem => dispatch(setListItem(listItem)),
     changeCurrentPage: page => dispatch(changeCurrentPage(page)),
-    changeKeyword: keyword => dispatch(changeKeyword(keyword))
+    changeKeyword: keyword => dispatch(changeKeyword(keyword)),
+    setListCategory: list => dispatch(setListCategory(list)),
+    checkClickOutSide: node => dispatch(checkClickOutSide(node)),
+    setShowModal: status => dispatch(setShowModal(status))
+
 })
 export default withRouter(connect(mapStateToProp, mapDispatchToProp)(SearchPage));

@@ -1,7 +1,6 @@
 import axios from 'axios';
-
+import { setListCategory } from '../actions/search.actions';
 const apiService = async (method, route,timeout, data, header) => {
-    'sdfsdfdsfdsf'
     const result = await axios({
         method,
         url: `http://27.74.250.96:8384/api/v1/${route}`,

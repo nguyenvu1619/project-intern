@@ -7,7 +7,11 @@ import {
     SEARCH_CHECK_CLICK_OUT_SIDE,
     SEARCH_CHANGE_CURRENT_PAGE,
     SEARCH_TOGGLE_SEARCH,
-    SEARCH_SET_LIST_ITEM
+    SEARCH_SET_LIST_ITEM,
+    SEARCH_SET_CATEGORY_LIST,
+    SEARCH_SET_SHOW_MODAL,
+    SEARCH_SET_ID_MODAL,
+    SEARCH_SET_SCROLL_POSTION
 } from '../constant';
 
 export const changeKeyword = keyword => {
@@ -17,10 +21,38 @@ export const changeKeyword = keyword => {
     }
 }
 
+export const setScrollPostion = positionScroll => {
+    return {
+    type: SEARCH_SET_SCROLL_POSTION,
+    positionScroll
+    }
+}
+
+export const setIDModal = id =>{
+    return {
+        type: SEARCH_SET_ID_MODAL,
+        idModal: id
+    }
+}
+
 export const setListItem = listItem => {
     return {
         type: SEARCH_SET_LIST_ITEM,
         listItem
+    }
+}
+
+export const setShowModal = isShowModal => {
+    return {
+        type: SEARCH_SET_SHOW_MODAL,
+        isShowModal
+    }
+}
+
+export const setListCategory = (listCategory) => {
+    return {
+        type: SEARCH_SET_CATEGORY_LIST,
+        listCategory
     }
 }
 

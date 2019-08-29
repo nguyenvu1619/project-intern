@@ -26,14 +26,12 @@ class SearchInput extends Component {
     componentDidMount(){
         const searchUrl = this.props.location.search;
         const keyword = queryString.parse(searchUrl).keyword;
-        console.log(this.props.keyword)
         if(this.props.keyword){
             if(this.inputRef.current){
                 this.inputRef.current.value = this.props.keyword;
             }
         }
         else if(keyword){
-            console.log(this.props.keyword)
         if(this.inputRef.current){
             this.inputRef.current.value = keyword;
         }
@@ -110,7 +108,6 @@ class SearchInput extends Component {
         }
     }
     render(){
-        console.log(this.state.keyword)
     return this.props.isSearch ? <div ref={this.checkSearch}>
      <Redirect to={`/search?keyword=${this.props.keyword}&page=1`} />
      </div> : <div style={this.props.style} className={`w-100 input-search__content collapsed ${this.state.isShowPopup ? 'active-toggle-content' : ''}`} id="autoComplete__content">
