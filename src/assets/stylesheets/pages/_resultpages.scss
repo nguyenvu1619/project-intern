@@ -20,6 +20,14 @@ $main:#3b63a1;
     background: white !important;
     color: #545454 !important;
 }
+.fade-window-active{
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    background: #707070;
+    opacity: 0.9;
+    z-index: 100;
+}
 .result-pages__header .dropdown-menu {
     z-index: 1030;
 }
@@ -202,7 +210,7 @@ $main:#3b63a1;
     height: 0;
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2);
     border: solid 1px #F0F0F0;
-    z-index: 1020;
+    z-index: 10;
 }
 
 .result-pages__body::after {

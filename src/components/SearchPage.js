@@ -51,11 +51,16 @@ class SearchPage extends Component {
         this.props.setShowModal(false)
     }
     render(){
-        console.log(this.props.listItem);
+        const bodyNode =document.getElementById('body-root');
+        const {isShowModal} = this.props;
+        if( isShowModal){
+        bodyNode.style.cssText= 'overflow-y:hidden';
+        }
+        else bodyNode.style.cssText= 'overflow-y:auto';
         return( <div>
-            {this.props.isShowModal && <PostModal />}
+            {isShowModal && <PostModal />}
         <section onKeyPress ={this.handleKeyDown}  className="section__result-pages" tabIndex="0" >
-       
+      {isShowModal&& <div className='fade-window-active'></div>}
         <div onKeyPress ={this.handleKeyDown} onClick={e => {this.props.checkClickOutSide(e.target)}} className="container-fluid result-pages__container">
             <div  className="result-pages__header layout-header">
                 <div className="result-pages__header-container layout-header__container">

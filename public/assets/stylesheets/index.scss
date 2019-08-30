@@ -25,6 +25,13 @@ img,
     margin-bottom: 20px;
     color: #363636;
 }
+.fade-window-active{
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    background: #707070;
+    opacity: 0.4;
+}
 .divider-gray{
 	border-bottom: 1px solid #e5e5e5;
 	margin: 20px 0px;

@@ -159,7 +159,7 @@
   height: 0;
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2);
   border: solid 1px #F0F0F0;
-  z-index: 1020; }
+  z-index: 10; }
 
 .result-pages__body::after {
   position: absolute;

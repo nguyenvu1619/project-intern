@@ -55,7 +55,9 @@ class PostModal extends Component {
             })
         }
     }
-
+    handleClickButton = event => {
+        this.props.setShowModal(false)
+    }
     handleKeyDown = event => {
         if(event.key === 'Escape')
         this.props.setShowModal(false);
@@ -67,7 +69,7 @@ class PostModal extends Component {
             <div ref={this.modalRef} class="ndt-modal__container">
                 <div ref={this.Modal} class="modal-content">
                 <div style={{padding: '9px', backgroundColor: 'rgba(59, 99, 161, 0.2)'}} class="modal-header">
-                        <button type="button" class="close close-button" data-dismiss="modal">×</button>
+                        <button onClick={this.handleClickButton} type="button" class="close close-button" data-dismiss="modal">×</button>
                         <div class="clearfix"></div>
                     </div>
                     <div class="modal-body">

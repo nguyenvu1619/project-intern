@@ -7,8 +7,7 @@ import {
     SEARCH_SET_LIST_ITEM,
     SEARCH_SET_CATEGORY_LIST,
     SEARCH_SET_SHOW_MODAL,
-    SEARCH_SET_ID_MODAL,
-    SEARCH_SET_SCROLL_POSTION
+    SEARCH_SET_ID_MODAL
 } from '../constant';
 
 const initializing = {
@@ -20,8 +19,7 @@ const initializing = {
     listItem: [],
     listCategory: [],
     isShowModal: false,
-    idModal: '',
-    positionScroll: 0
+    idModal: ''
 }
 
 
@@ -74,11 +72,6 @@ export default function searchReducer(state = initializing, action){
                 ...state,
                 idModal: action.idModal
             }
-        case SEARCH_SET_SCROLL_POSTION:
-            return {
-                ...state,
-                positionScroll: action.positionScroll
-            }  
         default:
             return state;
     }

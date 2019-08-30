@@ -11,20 +11,12 @@ import {
     SEARCH_SET_CATEGORY_LIST,
     SEARCH_SET_SHOW_MODAL,
     SEARCH_SET_ID_MODAL,
-    SEARCH_SET_SCROLL_POSTION
 } from '../constant';
 
 export const changeKeyword = keyword => {
     return {
         type: SEARCH_CHANGE_KEYWORD,
         keyword
-    }
-}
-
-export const setScrollPostion = positionScroll => {
-    return {
-    type: SEARCH_SET_SCROLL_POSTION,
-    positionScroll
     }
 }
 
